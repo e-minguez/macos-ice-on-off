@@ -12,7 +12,7 @@ Built as a lightweight Swift daemon using `CGDisplayRegisterReconfigurationCallb
 ## Install (one-liner)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/eminguez/macos-ice-on-off/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/e-minguez/macos-ice-on-off/main/install.sh | bash
 ```
 
 This downloads the pre-built binary for your architecture (arm64 or x86_64), installs it to `/usr/local/bin`, and loads a LaunchAgent so it starts automatically on login.
@@ -22,7 +22,7 @@ This downloads the pre-built binary for your architecture (arm64 or x86_64), ins
 Requires Xcode Command Line Tools (`xcode-select --install`).
 
 ```bash
-git clone https://github.com/eminguez/macos-ice-on-off
+git clone https://github.com/e-minguez/macos-ice-on-off
 cd macos-ice-on-off
 make install
 ```

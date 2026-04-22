@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="eminguez/macos-ice-on-off"
+REPO="e-minguez/macos-ice-on-off"
 BINARY_NAME="ice-monitor-toggle"
 INSTALL_DIR="$HOME/.local/bin"
 PLIST_NAME="com.jordanbaird.ice-monitor-toggle.plist"
