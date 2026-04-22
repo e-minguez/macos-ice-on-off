@@ -3,7 +3,7 @@ set -euo pipefail
 
 REPO="eminguez/macos-ice-on-off"
 BINARY_NAME="ice-monitor-toggle"
-INSTALL_DIR="/usr/local/bin"
+INSTALL_DIR="$HOME/.local/bin"
 PLIST_NAME="com.jordanbaird.ice-monitor-toggle.plist"
 PLIST_DST="$HOME/Library/LaunchAgents/$PLIST_NAME"
 
@@ -27,17 +27,17 @@ if [[ -z "$LATEST_URL" ]]; then
 fi
 
 echo "Downloading $ASSET..."
-curl -fsSL "$LATEST_URL" -o "/tmp/$BINARY_NAME"
-chmod +x "/tmp/$BINARY_NAME"
-
-echo "Installing binary to $INSTALL_DIR/$BINARY_NAME (may prompt for password)..."
-sudo mv "/tmp/$BINARY_NAME" "$INSTALL_DIR/$BINARY_NAME"
+mkdir -p "$INSTALL_DIR"
+curl -fsSL "$LATEST_URL" -o "$INSTALL_DIR/$BINARY_NAME"
+chmod +x "$INSTALL_DIR/$BINARY_NAME"
 
 echo "Installing LaunchAgent..."
-curl -fsSL "https://raw.githubusercontent.com/$REPO/main/$PLIST_NAME" -o "$PLIST_DST"
+mkdir -p "$HOME/Library/LaunchAgents"
+curl -fsSL "https://raw.githubusercontent.com/$REPO/main/$PLIST_NAME" -o "/tmp/$PLIST_NAME"
+# Rewrite placeholder path with actual binary location
+sed "s|BINARY_PATH_PLACEHOLDER|$INSTALL_DIR/$BINARY_NAME|" "/tmp/$PLIST_NAME" > "$PLIST_DST"
 
 echo "Loading LaunchAgent..."
 launchctl load -w "$PLIST_DST"
 
 echo "Done. ice-monitor-toggle is running."
-echo "Logs: /tmp/ice-monitor-toggle.log"
