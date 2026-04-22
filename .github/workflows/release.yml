@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.arch }})
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            swiftc_target: arm64-apple-macos14
+          - arch: x86_64
+            swiftc_target: x86_64-apple-macos14
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build binary
+        run: |
+          swiftc ice-toggle.swift \
+            -target ${{ matrix.swiftc_target }} \
+            -o ice-monitor-toggle-${{ matrix.arch }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ice-monitor-toggle-${{ matrix.arch }}
+          path: ice-monitor-toggle-${{ matrix.arch }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download arm64 binary
+        uses: actions/download-artifact@v4
+        with:
+          name: ice-monitor-toggle-arm64
+
+      - name: Download x86_64 binary
+        uses: actions/download-artifact@v4
+        with:
+          name: ice-monitor-toggle-x86_64
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ice-monitor-toggle-arm64
+            ice-monitor-toggle-x86_64
+          generate_release_notes: true
